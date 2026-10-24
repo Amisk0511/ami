@@ -58,7 +58,12 @@ form.addEventListener('submit',async event=>{
  try{
   const {error}=await supabase.from('bookings').insert(booking);
   if(error)throw error;
-  message.textContent=currentLanguage==='ta'?`Booking வெற்றிகரமாக அனுப்பப்பட்டது! Booking எண்: ${data.id}.`:currentLanguage==='si'?`ඔබගේ ඉල්ලීම යවා ඇත! වෙන්කිරීමේ අංකය: ${data.id}.`:`Booking request sent! Your booking number is ${data.id}.`;
+  message.textContent =
+  currentLanguage === 'ta'
+    ? 'Booking வெற்றிகரமாக அனுப்பப்பட்டது!'
+    : currentLanguage === 'si'
+      ? 'ඔබගේ ඉල්ලීම සාර්ථකව යවා ඇත!'
+      : 'Booking request sent successfully!';
   form.reset();serviceSelect.value='bike';updateCards();
  }catch(error){
   console.error('Ami booking error:',error);
