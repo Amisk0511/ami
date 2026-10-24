@@ -214,9 +214,10 @@ loginForm.addEventListener('submit', async (event) => {
     if (error) throw error;
 
     loginMessage.textContent = '';
- } catch (error) {
+} catch (error) {
   console.error('Ami login error:', error);
   loginMessage.textContent = 'Login error: ' + error.message;
+}
 } 
   } finally {
     loginButton.disabled = false;
