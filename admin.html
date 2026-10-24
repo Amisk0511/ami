@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ami Admin Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#18243b}
+header{background:#123b87;color:white;padding:20px}
+header h1{margin:0;font-size:25px}
+header p{margin:7px 0 0;color:#dbe7ff}
+.container{max-width:1100px;margin:auto;padding:20px}
+.welcome{background:linear-gradient(120deg,#1457d9,#3579f6);color:white;border-radius:18px;padding:25px;margin-bottom:22px}
+.welcome h2{margin-top:0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 3px 15px #dce4f1}
+.card .icon{font-size:29px}
+.card h3{font-size:15px;color:#62708a}
+.card strong{font-size:25px;color:#1457d9}
+.panel{background:white;padding:22px;border-radius:15px;margin-top:20px;box-shadow:0 3px 15px #dce4f1}
+.panel h2{margin-top:0;font-size:20px}
+label{display:block;font-weight:bold;margin:15px 0 7px}
+select,input{width:100%;padding:12px;border:1px solid #d4deed;border-radius:9px;font-size:16px}
+button{background:#1457d9;color:white;border:0;border-radius:9px;padding:13px 17px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:15px}
+.notice{background:#fff6dc;color:#775300;padding:14px;border-radius:10px;line-height:1.5}
+footer{text-align:center;color:#77839a;padding:25px;font-size:13px}
+@media(max-width:600px){.cards{grid-template-columns:1fr}.container{padding:13px}.welcome{padding:20px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚖 Ami Admin</h1>
+  <p>Taxi & Delivery Management</p>
+</header>
+
+<main class="container">
+  <section class="welcome">
+    <h2>Welcome, Admin!</h2>
+    <p>Manage your Ami services from one place.</p>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <div class="icon">📋</div>
+      <h3>Total Bookings</h3>
+      <strong id="bookings">0</strong>
+    </div>
+    <div class="card">
+      <div class="icon">🚗</div>
+      <h3>Registered Drivers</h3>
+      <strong id="drivers">0</strong>
+    </div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h3>Base Fare (LKR)</h3>
+      <strong id="fareDisplay">100</strong>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>💰 Fare Settings</h2>
+    <p>Set an example base fare for each service. These settings are currently saved only in this browser.</p>
+
+    <label for="service">Choose Service</label>
+    <select id="service">
+      <option value="bike">Bike Taxi</option>
+      <option value="car">Car Taxi</option>
+      <option value="delivery">Delivery</option>
+    </select>
+
+    <label for="baseFare">Base Fare (LKR)</label>
+    <input id="baseFare" type="number" min="0" value="100">
+
+    <label for="kmFare">Fare per kilometre (LKR)</label>
+    <input id="kmFare" type="number" min="0" value="50">
+
+    <button id="saveFare">Save Fare Settings</button>
+    <p id="message" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="panel">
+    <h2>📋 Booking Management</h2>
+    <p>No live bookings yet.</p>
+    <div class="notice">
+      Booking records will appear here after we connect the website to a secure database.
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>👨‍✈️ Driver Management</h2>
+    <p>No live driver records yet.</p>
+    <div class="notice">
+      Driver registration, document verification and approval will be activated in a later stage.
+    </div>
+  </section>
+</main>
+
+<footer>Ami Admin Dashboard · Demo version</footer>
+
+<script>
+const service = document.getElementById('service');
+const baseFare = document.getElementById('baseFare');
+const kmFare = document.getElementById('kmFare');
+const fareDisplay = document.getElementById('fareDisplay');
+const message = document.getElementById('message');
+
+function loadFare(){
+  const key = 'ami-fare-' + service.value;
+  const saved = JSON.parse(localStorage.getItem(key) || 'null');
+  baseFare.value = saved ? saved.baseFare : 100;
+  kmFare.value = saved ? saved.kmFare : 50;
+  fareDisplay.textContent = baseFare.value;
+  message.textContent = '';
+}
+
+service.addEventListener('change', loadFare);
+
+document.getElementById('saveFare').addEventListener('click', () => {
+  const base = Number(baseFare.value);
+  const km = Number(kmFare.value);
+
+  if(base < 0 || km < 0 || baseFare.value === '' || kmFare.value === ''){
+    message.textContent = 'Please enter valid fare amounts.';
+    return;
+  }
+
+  localStorage.setItem('ami-fare-' + service.value,
+    JSON.stringify({baseFare:base,kmFare:km}));
+
+  fareDisplay.textContent = base;
+  message.textContent = 'Fare settings saved in this browser.';
+});
+
+loadFare();
+</script>
+</body>
+</html>
