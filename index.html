@@ -36,7 +36,16 @@ footer{text-align:center;background:#10264b;color:white;padding:25px;font-size:1
 <header>
   <div class="logo">Ami<span>.</span></div>
   <a href="#booking">Book a Ride</a>
-</header>
+<div style="text-align:right;padding:10px 5%;">
+  <label for="languageSelect">🌐</label>
+  <select id="languageSelect" aria-label="Choose language"
+    onchange="changeLanguage(this.value)"
+    style="padding:8px;border-radius:8px;border:1px solid #d5deed;">
+    <option value="en">English</option>
+    <option value="ta">தமிழ்</option>
+    <option value="si">සිංහල</option>
+  </select>
+</div></header>
 
 <section class="hero">
   <h1>Your Journey.<br>Made Easy.</h1>
@@ -104,6 +113,72 @@ document.getElementById('bookingForm').addEventListener('submit', event => {
   document.getElementById('message').textContent =
     'Thank you! This is a demo. Real bookings will work after the backend is connected.';
 });
-</script>
+const translations = {
+  en: {
+    title: "Your Journey. Made Easy.",
+    subtitle: "Ride safely, travel comfortably, and deliver anything with Ami.",
+    bike: "Bike Taxi",
+    car: "Car Taxi",
+    delivery: "Delivery",
+    booking: "Where are you going?",
+    pickup: "Pickup Location",
+    destination: "Destination",
+    phone: "Mobile Number",
+    request: "Request a Ride →",
+    why: "Why Choose Ami?"
+  },
+  ta: {
+    title: "உங்கள் பயணம் இனி எளிதாக!",
+    subtitle: "Ami மூலம் பாதுகாப்பாகப் பயணம் செய்யுங்கள்; பொருட்களையும் அனுப்புங்கள்.",
+    bike: "பைக் டாக்ஸி",
+    car: "கார் டாக்ஸி",
+    delivery: "பொருள் விநியோகம்",
+    booking: "நீங்கள் எங்கே செல்ல விரும்புகிறீர்கள்?",
+    pickup: "ஏறும் இடம்",
+    destination: "இறங்கும் இடம்",
+    phone: "கைபேசி எண்",
+    request: "பயணத்தைக் கோருங்கள் →",
+    why: "ஏன் Ami-ஐத் தேர்ந்தெடுக்க வேண்டும்?"
+  },
+  si: {
+    title: "ඔබේ ගමන දැන් පහසුයි!",
+    subtitle: "Ami සමඟ ආරක්ෂිතව ගමන් කරන්න; භාණ්ඩත් බෙදාහරින්න.",
+    bike: "බයික් ටැක්සි",
+    car: "කාර් ටැක්සි",
+    delivery: "භාණ්ඩ බෙදාහැරීම",
+    booking: "ඔබ යන්නේ කොහේද?",
+    pickup: "ගමන ආරම්භ කරන ස්ථානය",
+    destination: "ගමනාන්තය",
+    phone: "දුරකථන අංකය",
+    request: "ගමනක් ඉල්ලන්න →",
+    why: "Ami තෝරාගන්නේ ඇයි?"
+  }
+};
+
+function changeLanguage(language) {
+  const t = translations[language];
+  if (!t) return;
+
+  document.querySelector(".hero h1").textContent = t.title;
+  document.querySelector(".hero > p").textContent = t.subtitle;
+  document.querySelectorAll(".service")[0].lastChild.textContent = t.bike;
+  document.querySelectorAll(".service")[1].lastChild.textContent = t.car;
+  document.querySelectorAll(".service")[2].lastChild.textContent = t.delivery;
+  document.querySelector(".booking h2").textContent = t.booking;
+  document.querySelector('label[for="pickup"]').textContent = t.pickup;
+  document.querySelector('label[for="destination"]').textContent = t.destination;
+  document.querySelector('label[for="phone"]').textContent = t.phone;
+  document.querySelector("#bookingForm button").textContent = t.request;
+  document.querySelector(".features h2").textContent = t.why;
+
+  document.documentElement.lang = language;
+  localStorage.setItem("ami-language", language);
+}
+
+const savedLanguage = localStorage.getItem("ami-language");
+if (savedLanguage && document.getElementById("languageSelect")) {
+  document.getElementById("languageSelect").value = savedLanguage;
+  changeLanguage(savedLanguage);
+}</script>
 </body>
 </html>
