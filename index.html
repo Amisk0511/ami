@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ami - Ride & Delivery</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8ff;color:#172033}
+header{background:#fff;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #dce3ef}
+.logo{font-size:27px;font-weight:800;color:#1457d9}
+.logo span{color:#13a875}
+header a{background:#1457d9;color:white;text-decoration:none;padding:11px 16px;border-radius:10px;font-weight:bold}
+.hero{padding:45px 6%;background:linear-gradient(135deg,#eaf1ff,#fff);text-align:center}
+.hero h1{font-size:clamp(32px,7vw,54px);margin:10px 0;color:#142c59}
+.hero p{color:#62708a;font-size:17px;line-height:1.6}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:850px;margin:28px auto}
+.service{background:white;border:2px solid #e1e9f7;border-radius:16px;padding:20px 8px;font-weight:bold;cursor:pointer}
+.service.active{border-color:#1457d9;background:#eaf1ff}
+.icon{font-size:32px;display:block;margin-bottom:9px}
+.booking{background:white;padding:24px;border-radius:20px;max-width:520px;margin:25px auto;box-shadow:0 8px 28px #dfe7f4;text-align:left}
+.booking h2{text-align:center;margin-top:0}
+label{display:block;font-size:14px;font-weight:bold;margin:15px 0 7px}
+input,select{width:100%;padding:14px;border:1px solid #d5deed;border-radius:10px;font-size:16px;background:#fff}
+button{width:100%;border:0;background:#1457d9;color:white;padding:15px;border-radius:11px;font-size:16px;font-weight:bold;margin-top:20px;cursor:pointer}
+.note{font-size:12px;color:#738099;text-align:center;line-height:1.5}
+.features{padding:35px 6%;text-align:center}
+.features h2{font-size:27px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;max-width:900px;margin:20px auto}
+.feature{background:white;padding:20px;border-radius:15px}
+footer{text-align:center;background:#10264b;color:white;padding:25px;font-size:13px}
+@media(max-width:600px){.services{gap:7px}.service{font-size:13px;padding:15px 4px}.icon{font-size:28px}.hero{padding:32px 5%}.booking{padding:19px}.feature-grid{grid-template-columns:1fr}.features{padding:25px 5%}header{padding:15px 5%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Ami<span>.</span></div>
+  <a href="#booking">Book a Ride</a>
+</header>
+
+<section class="hero">
+  <h1>Your Journey.<br>Made Easy.</h1>
+  <p>Ride safely, travel comfortably, and deliver anything with Ami.</p>
+
+  <div class="services">
+    <div class="service active" data-service="Bike Taxi"><span class="icon">🏍️</span>Bike Taxi</div>
+    <div class="service" data-service="Car Taxi"><span class="icon">🚗</span>Car Taxi</div>
+    <div class="service" data-service="Delivery"><span class="icon">📦</span>Delivery</div>
+  </div>
+
+  <div class="booking" id="booking">
+    <h2>Where are you going?</h2>
+    <form id="bookingForm">
+      <label for="service">Choose Service</label>
+      <select id="service" name="service">
+        <option>Bike Taxi</option>
+        <option>Car Taxi</option>
+        <option>Delivery</option>
+      </select>
+      <label for="pickup">Pickup Location</label>
+      <input id="pickup" name="pickup" placeholder="Enter pickup location" required>
+      <label for="destination">Destination</label>
+      <input id="destination" name="destination" placeholder="Where to?" required>
+      <label for="phone">Mobile Number</label>
+      <input id="phone" name="phone" type="tel" placeholder="Enter mobile number" required>
+      <button type="submit">Request a Ride →</button>
+      <p class="note">Demo website only. Online booking will be activated after backend setup.</p>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="features">
+  <h2>Why Choose Ami?</h2>
+  <div class="feature-grid">
+    <div class="feature"><span class="icon">🛡️</span><h3>Safety First</h3><p>Our goal is a safer journey for everyone.</p></div>
+    <div class="feature"><span class="icon">⚡</span><h3>Easy Booking</h3><p>Simple and convenient ride requests.</p></div>
+    <div class="feature"><span class="icon">📍</span><h3>Local Service</h3><p>Built for everyday travel and delivery.</p></div>
+  </div>
+</section>
+
+<footer>
+  <strong>Ami — Ride & Delivery</strong>
+  <p>Making every journey easier.</p>
+  <p>© 2026 Ami. All rights reserved.</p>
+</footer>
+
+<script>
+const serviceSelect = document.getElementById('service');
+document.querySelectorAll('.service').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.service').forEach(item => item.classList.remove('active'));
+    card.classList.add('active');
+    serviceSelect.value = card.dataset.service;
+  });
+});
+serviceSelect.addEventListener('change', () => {
+  document.querySelectorAll('.service').forEach(card => {
+    card.classList.toggle('active', card.dataset.service === serviceSelect.value);
+  });
+});
+document.getElementById('bookingForm').addEventListener('submit', event => {
+  event.preventDefault();
+  document.getElementById('message').textContent =
+    'Thank you! This is a demo. Real bookings will work after the backend is connected.';
+});
+</script>
+</body>
+</html>
