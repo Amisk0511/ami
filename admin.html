@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ami Admin Dashboard</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#18243b}
@@ -23,35 +22,31 @@ header p{margin:7px 0 0;color:#dbe7ff}
 label{display:block;font-weight:bold;margin:15px 0 7px}
 select,input{width:100%;padding:12px;border:1px solid #d4deed;border-radius:9px;font-size:16px}
 button{background:#1457d9;color:white;border:0;border-radius:9px;padding:13px 17px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:15px}
+button:disabled{opacity:.6;cursor:wait}
 .notice{background:#fff6dc;color:#775300;padding:14px;border-radius:10px;line-height:1.5}
 footer{text-align:center;color:#77839a;padding:25px;font-size:13px}
 #dashboard{display:none}
 #loginBox{max-width:420px;margin:35px auto;background:white;padding:24px;border-radius:15px;box-shadow:0 3px 15px #dce4f1}
-#loginMessage{color:#b42318;line-height:1.5}
+#loginMessage{color:#b42318;line-height:1.5;overflow-wrap:anywhere}
 #logoutButton{background:#b42318;float:right;margin:0}
 @media(max-width:600px){.cards{grid-template-columns:1fr}.container{padding:13px}.welcome{padding:20px}}
 </style>
 </head>
-
 <body>
-
 <header>
-  <button id="logoutButton" style="display:none">Logout</button>
+  <button id="logoutButton" type="button" style="display:none">Logout</button>
   <h1>🚖 Ami Admin</h1>
-  <p>Taxi & Delivery Management</p>
+  <p>Taxi &amp; Delivery Management</p>
 </header>
 
 <section id="loginBox">
   <h2>🔐 Admin Login</h2>
   <p>Sign in using your authorized account.</p>
-
   <form id="loginForm">
     <label for="email">Email</label>
     <input id="email" type="email" autocomplete="username" required>
-
     <label for="password">Password</label>
     <input id="password" type="password" autocomplete="current-password" required>
-
     <button type="submit" id="loginButton">Login</button>
     <p id="loginMessage" role="status" aria-live="polite"></p>
   </form>
@@ -59,79 +54,46 @@ footer{text-align:center;color:#77839a;padding:25px;font-size:13px}
 
 <div id="dashboard">
 <main class="container">
-
   <section class="welcome">
     <h2>Welcome, Admin!</h2>
     <p>Manage your Ami services from one place.</p>
   </section>
-
   <section class="cards">
-    <div class="card">
-      <div class="icon">📋</div>
-      <h3>Total Bookings</h3>
-      <strong id="bookings">0</strong>
-    </div>
-
-    <div class="card">
-      <div class="icon">🚗</div>
-      <h3>Registered Drivers</h3>
-      <strong id="drivers">0</strong>
-    </div>
-
-    <div class="card">
-      <div class="icon">💰</div>
-      <h3>Base Fare (LKR)</h3>
-      <strong id="fareDisplay">100</strong>
-    </div>
+    <div class="card"><div class="icon">📋</div><h3>Total Bookings</h3><strong id="bookings">0</strong></div>
+    <div class="card"><div class="icon">🚗</div><h3>Registered Drivers</h3><strong id="drivers">0</strong></div>
+    <div class="card"><div class="icon">💰</div><h3>Base Fare (LKR)</h3><strong id="fareDisplay">100</strong></div>
   </section>
-
   <section class="panel">
     <h2>💰 Fare Settings</h2>
     <p>These settings are saved only in this browser for now.</p>
-
     <label for="service">Choose Service</label>
-    <select id="service">
-      <option value="bike">Bike Taxi</option>
-      <option value="car">Car Taxi</option>
-      <option value="delivery">Delivery</option>
-    </select>
-
+    <select id="service"><option value="bike">Bike Taxi</option><option value="car">Car Taxi</option><option value="delivery">Delivery</option></select>
     <label for="baseFare">Base Fare (LKR)</label>
     <input id="baseFare" type="number" min="0" value="100" required>
-
     <label for="kmFare">Fare per kilometre (LKR)</label>
     <input id="kmFare" type="number" min="0" value="50" required>
-
     <button id="saveFare" type="button">Save Fare Settings</button>
     <p id="message" role="status" aria-live="polite"></p>
   </section>
-
   <section class="panel">
     <h2>📋 Booking Management</h2>
     <p>No live bookings yet.</p>
     <div class="notice">Bookings will appear here after a secure database connection is configured.</div>
   </section>
-
   <section class="panel">
     <h2>👨‍✈️ Driver Management</h2>
     <p>No live driver records yet.</p>
     <div class="notice">Driver registration, document verification and approval are not active yet.</div>
   </section>
-
 </main>
 </div>
-
 <footer>Ami Admin Dashboard</footer>
 
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-/*
-  Replace these two placeholder values with your own
-  Supabase Project URL and Publishable Key.
-  Never put a service_role or secret key here.
-*/
-const SUPABASE_URL = 'https://znfrhckwbmygrzmvvscg.supabase.co/rest/v1/';
+// Use your Supabase Project URL (without /rest/v1/) and Publishable Key.
+const SUPABASE_URL = 'https://znfrhckwbmygrzmvvscg.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_nsvo3aXfG1hcVe-XzLFIeg_EFissxJM';
 
 const loginBox = document.getElementById('loginBox');
@@ -140,65 +102,63 @@ const loginForm = document.getElementById('loginForm');
 const loginMessage = document.getElementById('loginMessage');
 const loginButton = document.getElementById('loginButton');
 const logoutButton = document.getElementById('logoutButton');
-
 const service = document.getElementById('service');
 const baseFare = document.getElementById('baseFare');
 const kmFare = document.getElementById('kmFare');
 const fareDisplay = document.getElementById('fareDisplay');
 const message = document.getElementById('message');
 
-let supabase = null;
+let supabase;
 let sessionReady = false;
 
-function showLoggedOut(){
+function showLoggedOut() {
   loginBox.style.display = 'block';
   dashboard.style.display = 'none';
   logoutButton.style.display = 'none';
 }
 
-function showLoggedIn(){
+function showLoggedIn() {
   loginBox.style.display = 'none';
   dashboard.style.display = 'block';
   logoutButton.style.display = 'inline-block';
   loadFare();
 }
 
-if (
-  SUPABASE_URL.startsWith('https://') &&
-  !SUPABASE_URL.includes('PASTE_') &&
-  SUPABASE_PUBLISHABLE_KEY &&
-  !SUPABASE_PUBLISHABLE_KEY.includes('PASTE_')
-) {
-  supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+function loadFare() {
+  const saved = JSON.parse(localStorage.getItem('ami-fare-' + service.value) || 'null');
+  baseFare.value = saved ? saved.baseFare : 100;
+  kmFare.value = saved ? saved.kmFare : 50;
+  fareDisplay.textContent = baseFare.value;
+  message.textContent = '';
+}
 
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (session) {
-    showLoggedIn();
-  } else {
-    showLoggedOut();
+try {
+  if (!SUPABASE_URL.startsWith('https://') || !SUPABASE_PUBLISHABLE_KEY) {
+    throw new Error('Supabase URL or Publishable Key is missing.');
   }
 
-  supabase.auth.onAuthStateChange((_event, session) => {
-    if (session) {
-      showLoggedIn();
-    } else {
-      showLoggedOut();
-    }
-  });
+  supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
 
+  if (data.session) showLoggedIn();
+  else showLoggedOut();
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session) showLoggedIn();
+    else showLoggedOut();
+  });
   sessionReady = true;
-} else {
+} catch (error) {
+  console.error('Ami Supabase setup error:', error);
   showLoggedOut();
-  loginMessage.textContent =
-    'Setup required: add your Supabase Project URL and Publishable Key in the code.';
+  loginMessage.textContent = 'Setup error: ' + (error.message || 'Could not connect to Supabase.');
 }
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-
   if (!supabase || !sessionReady) {
-    loginMessage.textContent = 'Supabase setup is not complete yet.';
+    loginMessage.textContent = 'Supabase is not ready. Refresh this page and try again.';
     return;
   }
 
@@ -210,57 +170,40 @@ loginForm.addEventListener('submit', async (event) => {
       email: document.getElementById('email').value.trim(),
       password: document.getElementById('password').value
     });
-
     if (error) throw error;
-
-    loginMessage.textContent = '';
-} catch (error) {
-  console.error('Ami login error:', error);
-  loginMessage.textContent = 'Login error: ' + error.message;
-}
-} 
+    loginMessage.textContent = 'Login successful.';
+  } catch (error) {
+    console.error('Ami login error:', error);
+    loginMessage.textContent = 'Login error: ' + (error.message || 'Please check your login details and connection.');
   } finally {
     loginButton.disabled = false;
   }
 });
 
 logoutButton.addEventListener('click', async () => {
-  if (supabase) {
-    await supabase.auth.signOut();
+  if (!supabase) return;
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    loginMessage.textContent = 'Logout error: ' + error.message;
+    return;
   }
   showLoggedOut();
 });
-
-function loadFare(){
-  const saved = JSON.parse(localStorage.getItem('ami-fare-' + service.value) || 'null');
-  baseFare.value = saved ? saved.baseFare : 100;
-  kmFare.value = saved ? saved.kmFare : 50;
-  fareDisplay.textContent = baseFare.value;
-  message.textContent = '';
-}
 
 service.addEventListener('change', loadFare);
 
 document.getElementById('saveFare').addEventListener('click', () => {
   const base = Number(baseFare.value);
   const km = Number(kmFare.value);
-
   if (baseFare.value === '' || kmFare.value === '' ||
-      !Number.isFinite(base) || !Number.isFinite(km) ||
-      base < 0 || km < 0) {
+      !Number.isFinite(base) || !Number.isFinite(km) || base < 0 || km < 0) {
     message.textContent = 'Please enter valid fare amounts.';
     return;
   }
-
-  localStorage.setItem(
-    'ami-fare-' + service.value,
-    JSON.stringify({baseFare:base, kmFare:km})
-  );
-
+  localStorage.setItem('ami-fare-' + service.value, JSON.stringify({baseFare:base, kmFare:km}));
   fareDisplay.textContent = base;
   message.textContent = 'Fare settings saved in this browser only.';
 });
 </script>
-
 </body>
 </html>
