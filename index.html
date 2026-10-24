@@ -45,7 +45,8 @@ footer{text-align:center;background:#10264b;color:white;padding:25px;font-size:1
     <option value="ta">தமிழ்</option>
     <option value="si">සිංහල</option>
   </select>
-</div></header>
+</div>
+</header>
 
 <section class="hero">
   <h1>Your Journey.<br>Made Easy.</h1>
@@ -179,6 +180,7 @@ const savedLanguage = localStorage.getItem("ami-language");
 if (savedLanguage && document.getElementById("languageSelect")) {
   document.getElementById("languageSelect").value = savedLanguage;
   changeLanguage(savedLanguage);
-}</script>
+}
+</script>
 </body>
 </html>
