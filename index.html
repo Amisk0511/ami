@@ -56,7 +56,14 @@ form.addEventListener('submit',async event=>{
  event.preventDefault();message.textContent='';submitButton.disabled=true;submitButton.textContent='Sending request...';
  const booking={customer_name:document.getElementById('customerName').value.trim(),customer_phone:document.getElementById('phone').value.trim(),service_type:serviceSelect.value,pickup_location:document.getElementById('pickup').value.trim(),destination:document.getElementById('destination').value.trim(),status:'pending'};
  try{
-  const {error}=await supabase.from('bookings').insert(booking);
+  const {data, error} = await supabase
+  .from('bookings')
+  .insert(booking)
+  .select();
+
+console.log('Booking result:', {data, error});
+
+if (error) throw error;
   if(error)throw error;
   message.textContent =
   currentLanguage === 'ta'
