@@ -231,6 +231,62 @@ logoutButton.addEventListener('click', async () => {
 });
 
 service.addEventListener('change', loadFare);
+  const bookingList = document.getElementById('bookingList');
+const bookingMessage = document.getElementById('bookingMessage');
+
+async function loadBookings() {
+  bookingMessage.textContent = 'Loading bookings...';
+  bookingList.replaceChildren();
+
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('id, customer_name, customer_phone, service_type, pickup_location, destination, status, created_at')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    document.getElementById('bookings').textContent = data.length;
+
+    if (data.length === 0) {
+      bookingList.textContent = 'No bookings found.';
+      bookingMessage.textContent = '';
+      return;
+    }
+
+    data.forEach((booking) => {
+      const card = document.createElement('div');
+      card.style.cssText =
+        'border:1px solid #d4deed;border-radius:10px;padding:15px;margin-top:12px;overflow-wrap:anywhere';
+
+      const title = document.createElement('h3');
+      title.textContent =
+        `Booking #${booking.id} — ${booking.service_type.toUpperCase()}`;
+
+      const details = document.createElement('p');
+      details.textContent =
+        `Customer: ${booking.customer_name} | Phone: ${booking.customer_phone} | Pickup: ${booking.pickup_location} | Destination: ${booking.destination} | Status: ${booking.status}`;
+
+      const date = document.createElement('p');
+      date.textContent = 'Created: ' +
+        new Date(booking.created_at).toLocaleString();
+
+      card.append(title, details, date);
+      bookingList.append(card);
+    });
+
+    bookingMessage.textContent = 'Bookings loaded successfully.';
+  } catch (error) {
+    console.error('Load bookings error:', error);
+    bookingMessage.textContent =
+      'Could not load bookings: ' + error.message;
+  }
+}
+
+document.getElementById('refreshBookings')
+  .addEventListener('click', loadBookings);
+  loadBookings
+  loadBookings();
 
 document.getElementById('saveFare').addEventListener('click', () => {
   const base = Number(baseFare.value);
