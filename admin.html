@@ -75,11 +75,12 @@ footer{text-align:center;color:#77839a;padding:25px;font-size:13px}
     <button id="saveFare" type="button">Save Fare Settings</button>
     <p id="message" role="status" aria-live="polite"></p>
   </section>
-  <section class="panel">
-    <h2>📋 Booking Management</h2>
-    <p>No live bookings yet.</p>
-    <div class="notice">Bookings will appear here after a secure database connection is configured.</div>
-  </section>
+<section class="panel">
+  <h2>📋 Booking Management</h2>
+  <button id="refreshBookings" type="button">Refresh Bookings</button>
+  <p id="bookingMessage" role="status" aria-live="polite"></p>
+  <div id="bookingList">Loading bookings...</div>
+</section>
   <section class="panel">
     <h2>👨‍✈️ Driver Management</h2>
     <p>No live driver records yet.</p>
