@@ -117,11 +117,47 @@ function showLoggedOut() {
   logoutButton.style.display = 'none';
 }
 
-function showLoggedIn() {
-  loginBox.style.display = 'none';
-  dashboard.style.display = 'block';
-  logoutButton.style.display = 'inline-block';
-  loadFare();
+async function showLoggedIn() {
+  loginBox.style.display = 'block';
+  dashboard.style.display = 'none';
+  logoutButton.style.display = 'none';
+  loginMessage.textContent = 'Checking admin permissions...';
+
+  try {
+    const { data: { user }, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error('Please sign in again.');
+    }
+
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      await supabase.auth.signOut();
+      throw new Error('Access denied. This account is not an authorized admin.');
+    }
+
+    loginBox.style.display = 'none';
+    dashboard.style.display = 'block';
+    logoutButton.style.display = 'inline-block';
+    loginMessage.textContent = '';
+    loadFare();
+
+  } catch (error) {
+    console.error('Admin verification error:', error);
+    loginBox.style.display = 'block';
+    dashboard.style.display = 'none';
+    logoutButton.style.display = 'none';
+    loginMessage.textContent =
+      error.message || 'Unable to verify admin permissions.';
+  }
 }
 
 function loadFare() {
@@ -141,12 +177,15 @@ try {
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
 
-  if (data.session) showLoggedIn();
-  else showLoggedOut();
+  if (data.session) await showLoggedIn();
+else showLoggedOut();
 
   supabase.auth.onAuthStateChange((_event, session) => {
-    if (session) showLoggedIn();
-    else showLoggedOut();
+     if (session) {
+  showLoggedIn();
+} else {
+  showLoggedOut();
+}
   });
   sessionReady = true;
 } catch (error) {
